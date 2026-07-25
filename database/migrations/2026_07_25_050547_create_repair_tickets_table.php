@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('repair_tickets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('daily_report_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('rig_unit_id')->constrained()->cascadeOnDelete();
+            $table->text('issue_description');
+            $table->enum('status', ['open', 'in_progress', 'resolved'])->default('open');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('repair_tickets');

@@ -6,20 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rig_unit_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->date('report_date');
+            $table->decimal('hourmeter_start', 10, 2);
+            $table->decimal('hourmeter_end', 10, 2);
+            $table->decimal('fuel_liters', 10, 2);
+            $table->decimal('depth_meters', 10, 2);
+            $table->text('equipment_issue')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('daily_reports');
