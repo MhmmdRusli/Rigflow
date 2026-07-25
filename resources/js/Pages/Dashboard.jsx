@@ -1,8 +1,10 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+
 export default function Dashboard() {
     return (
-        <div className="p-8">
-            <h1 className="text-2xl font-semibold">RigFlow Dashboard</h1>
-            <p className="text-gray-600 mt-2">Inertia + React berhasil jalan 🎉</p>
-        </div>
+        <AuthenticatedLayout>
+            <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
+            <p className="mt-2 text-gray-600">Selamat datang di RigFlow 🎉</p>
+        </AuthenticatedLayout>
     );
 }
