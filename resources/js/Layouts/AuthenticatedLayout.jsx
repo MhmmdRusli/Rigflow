@@ -1,4 +1,8 @@
 import { Link, usePage, router } from '@inertiajs/react';
+import {
+    LayoutDashboard, ClipboardList, Package, Wrench,
+    Wallet, Users, LogOut,
+} from 'lucide-react';
 
 const roleLabels = {
     site_supervisor: 'Mandor Lapangan',
@@ -7,8 +11,18 @@ const roleLabels = {
     client: 'Klien',
 };
 
+const navItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['site_supervisor', 'project_manager', 'warehouse', 'client'] },
+    { href: '/daily-reports', label: 'Laporan Harian', icon: ClipboardList, roles: ['site_supervisor', 'project_manager'] },
+    { href: '/inventory', label: 'Inventaris', icon: Package, roles: ['warehouse', 'project_manager'] },
+    { href: '/repair-tickets', label: 'Tiket Perbaikan', icon: Wrench, roles: ['warehouse', 'project_manager'] },
+    { href: '/cost-entries', label: 'Biaya vs Anggaran', icon: Wallet, roles: ['project_manager', 'client'] },
+    { href: '/crew-members', label: 'Kru & Timesheet', icon: Users, roles: ['site_supervisor', 'project_manager'] },
+];
+
 export default function AuthenticatedLayout({ children }) {
-    const { auth } = usePage().props;
+    const { auth, url } = usePage().props;
+    const currentUrl = usePage().url;
 
     function logout(e) {
         e.preventDefault();
@@ -16,44 +30,60 @@ export default function AuthenticatedLayout({ children }) {
     }
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <aside className="w-64 shrink-0 bg-gray-900 text-white">
-                <div className="p-6">
-                    <h1 className="text-lg font-semibold">RigFlow</h1>
-                    <p className="mt-1 text-xs text-gray-400">
+        <div className="flex min-h-screen bg-[var(--color-slate-50,#F8FAFC)]">
+            <aside className="flex w-64 shrink-0 flex-col bg-navy-950 text-white">
+                <div className="border-b border-navy-800 p-6">
+                    <h1 className="font-display text-lg font-semibold tracking-tight">RigFlow</h1>
+                    <p className="mt-1 font-data text-xs text-blue-300/70">
                         {roleLabels[auth.user?.role] ?? auth.user?.role}
                     </p>
                 </div>
-                <nav className="mt-4 flex flex-col gap-1 px-3">
-                    <Link href="/dashboard" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
-                        Dashboard
-                    </Link>
-                    <Link href="/inventory" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
-                        Inventaris
-                    </Link>
-                    <Link href="/daily-reports" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
-                        Laporan Harian
-                    </Link>
-                    <Link href="/repair-tickets" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
-                        Tiket Perbaikan
-                    </Link>
-                    <Link href="/cost-entries" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
-                        Biaya vs Anggaran
-                    </Link>
-                    <Link href="/crew-members" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
-                        Kru & Timesheet
-                    </Link>
+
+                <nav className="flex flex-1 flex-col gap-1 p-3">
+                    {navItems
+                        .filter((item) => item.roles.includes(auth.user?.role))
+                        .map((item) => {
+                            const Icon = item.icon;
+                            const active = currentUrl.startsWith(item.href);
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                                        active
+                                            ? 'bg-brand-600 text-white'
+                                            : 'text-slate-300 hover:bg-navy-800 hover:text-white'
+                                    }`}
+                                >
+                                    <Icon size={17} strokeWidth={2} />
+                                    {item.label}
+                                </Link>
+                            );
+                        })}
                 </nav>
+
+                <div className="border-t border-navy-800 p-3">
+                    <button
+                        onClick={logout}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-300 transition-colors hover:bg-navy-800 hover:text-white"
+                    >
+                        <LogOut size={17} strokeWidth={2} />
+                        Keluar
+                    </button>
+                </div>
             </aside>
 
             <div className="flex flex-1 flex-col">
-                <header className="flex items-center justify-between border-b bg-white px-6 py-4">
-                    <span className="text-sm text-gray-600">{auth.user?.name}</span>
-                    <button onClick={logout} className="text-sm text-red-600 hover:underline">
-                        Keluar
-                    </button>
+                <header className="flex items-center justify-between border-b border-slate-200 bg-white px-8 py-4">
+                    <div />
+                    <div className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-slate-700">{auth.user?.name}</span>
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 font-display text-sm font-semibold text-brand-600">
+                            {auth.user?.name?.charAt(0)}
+                        </div>
+                    </div>
                 </header>
-                <main className="flex-1 p-6">{children}</main>
+                <main className="flex-1 p-8">{children}</main>
             </div>
         </div>
     );
