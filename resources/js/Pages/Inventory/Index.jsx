@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import { Link, router } from '@inertiajs/react';
+import { Package, Plus, Trash2 } from 'lucide-react';
 
 export default function Index({ items }) {
     function handleDelete(id) {
@@ -10,54 +11,62 @@ export default function Index({ items }) {
 
     return (
         <AuthenticatedLayout>
-            <div className="mb-4 flex items-center justify-between">
-                <h1 className="text-2xl font-semibold text-gray-800">Inventaris</h1>
+            <div className="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 className="font-display text-2xl font-semibold text-slate-900">Inventaris</h1>
+                    <p className="text-sm text-slate-500">Stok sparepart & bahan bakar gudang lapangan</p>
+                </div>
                 <Link
                     href="/inventory/create"
-                    className="rounded bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-800"
+                    className="flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
                 >
-                    + Tambah Item
+                    <Plus size={16} /> Tambah Item
                 </Link>
             </div>
 
-            <div className="overflow-hidden rounded-lg border bg-white">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <table className="w-full text-left text-sm">
-                    <thead className="bg-gray-100 text-gray-600">
+                    <thead className="border-b border-slate-200 bg-slate-50 text-xs font-medium uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-4 py-3">Nama</th>
-                            <th className="px-4 py-3">Proyek</th>
-                            <th className="px-4 py-3">Kategori</th>
-                            <th className="px-4 py-3">Stok</th>
-                            <th className="px-4 py-3">Status</th>
-                            <th className="px-4 py-3"></th>
+                            <th className="px-5 py-3">Nama</th>
+                            <th className="px-5 py-3">Proyek</th>
+                            <th className="px-5 py-3">Kategori</th>
+                            <th className="px-5 py-3">Stok</th>
+                            <th className="px-5 py-3">Status</th>
+                            <th className="px-5 py-3"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-slate-100">
                         {items.map((item) => {
                             const isLow = item.quantity <= item.low_stock_threshold;
                             return (
-                                <tr key={item.id} className="border-t">
-                                    <td className="px-4 py-3">{item.name}</td>
-                                    <td className="px-4 py-3">{item.project?.name}</td>
-                                    <td className="px-4 py-3">{item.category}</td>
-                                    <td className="px-4 py-3">{item.quantity} {item.unit}</td>
-                                    <td className="px-4 py-3">
+                                <tr key={item.id} className="hover:bg-slate-50">
+                                    <td className="px-5 py-3.5 font-medium text-slate-800">
+                                        <div className="flex items-center gap-2">
+                                            <Package size={15} className="text-slate-400" />
+                                            {item.name}
+                                        </div>
+                                    </td>
+                                    <td className="px-5 py-3.5 text-slate-600">{item.project?.name}</td>
+                                    <td className="px-5 py-3.5 text-slate-600 capitalize">{item.category}</td>
+                                    <td className="px-5 py-3.5 font-data text-slate-700">{item.quantity} {item.unit}</td>
+                                    <td className="px-5 py-3.5">
                                         {isLow ? (
-                                            <span className="rounded bg-red-100 px-2 py-1 text-xs text-red-700">
+                                            <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">
                                                 Low Stock
                                             </span>
                                         ) : (
-                                            <span className="rounded bg-green-100 px-2 py-1 text-xs text-green-700">
+                                            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">
                                                 Aman
                                             </span>
                                         )}
                                     </td>
-                                    <td className="px-4 py-3">
+                                    <td className="px-5 py-3.5 text-right">
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="text-red-600 hover:underline"
+                                            className="text-slate-400 hover:text-red-600"
                                         >
-                                            Hapus
+                                            <Trash2 size={15} />
                                         </button>
                                     </td>
                                 </tr>

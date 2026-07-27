@@ -31,16 +31,24 @@ class DashboardController extends Controller
             ->get()
             ->avg(fn ($r) => $r->fuel_liters / $r->depth_meters);
 
-        return Inertia::render('Dashboard', [
-            'project' => $project,
-            'totalSpent' => $totalSpent,
-            'budgetUsedPercent' => $project->budget > 0
-                ? round(($totalSpent / $project->budget) * 100, 1)
-                : 0,
-            'lowStockItems' => $lowStockItems,
-            'openTicketsCount' => $openTickets,
-            'recentReports' => $recentReports,
-            'avgEfficiency' => round($avgEfficiency ?? 0, 2),
-        ]);
+            $breakdown = CostEntry::where('project_id', $project->id)
+            ->get()
+            ->groupBy('category')
+            ->map(fn ($group) => $group->sum('amount'))
+            ->map(fn ($amount, $category) => ['category' => $category, 'amount' => $amount])
+            ->values();
+
+            return Inertia::render('Dashboard', [
+        'project' => $project,
+        'totalSpent' => $totalSpent,
+        'budgetUsedPercent' => $project->budget > 0
+            ? round(($totalSpent / $project->budget) * 100, 1)
+            : 0,
+        'lowStockItems' => $lowStockItems,
+        'openTicketsCount' => $openTickets,
+        'recentReports' => $recentReports,
+        'avgEfficiency' => round($avgEfficiency ?? 0, 2),
+        'breakdown' => $breakdown,
+    ]);
     }
 }

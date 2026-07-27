@@ -32,9 +32,10 @@ export default function AuthenticatedLayout({ children }) {
     return (
         <div className="flex min-h-screen bg-[var(--color-slate-50,#F8FAFC)]">
             <aside className="flex w-64 shrink-0 flex-col bg-navy-950 text-white">
-                <div className="border-b border-navy-800 p-6">
-                    <h1 className="font-display text-lg font-semibold tracking-tight">RigFlow</h1>
-                    <p className="mt-1 font-data text-xs text-blue-300/70">
+                <div className="relative overflow-hidden border-b border-navy-800 p-6">
+                    <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-brand-600/20 blur-2xl" />
+                    <h1 className="font-display relative text-lg font-semibold tracking-tight">RigFlow</h1>
+                    <p className="relative mt-1 font-data text-xs text-blue-300/70">
                         {roleLabels[auth.user?.role] ?? auth.user?.role}
                     </p>
                 </div>
@@ -49,11 +50,10 @@ export default function AuthenticatedLayout({ children }) {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                                        active
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${active
                                             ? 'bg-brand-600 text-white'
                                             : 'text-slate-300 hover:bg-navy-800 hover:text-white'
-                                    }`}
+                                        }`}
                                 >
                                     <Icon size={17} strokeWidth={2} />
                                     {item.label}

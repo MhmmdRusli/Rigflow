@@ -1,52 +1,59 @@
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import { Link } from '@inertiajs/react';
+import { ClipboardList, Plus, AlertCircle } from 'lucide-react';
 
 export default function Index({ reports }) {
     return (
         <AuthenticatedLayout>
-            <div className="mb-4 flex items-center justify-between">
-                <h1 className="text-2xl font-semibold text-gray-800">Laporan Harian</h1>
+            <div className="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 className="font-display text-2xl font-semibold text-slate-900">Laporan Harian</h1>
+                    <p className="text-sm text-slate-500">Input operasional harian per unit rig</p>
+                </div>
                 <Link
                     href="/daily-reports/create"
-                    className="rounded bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-800"
+                    className="flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
                 >
-                    + Laporan Baru
+                    <Plus size={16} /> Laporan Baru
                 </Link>
             </div>
 
-            <div className="overflow-hidden rounded-lg border bg-white">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <table className="w-full text-left text-sm">
-                    <thead className="bg-gray-100 text-gray-600">
+                    <thead className="border-b border-slate-200 bg-slate-50 text-xs font-medium uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th className="px-4 py-3">Tanggal</th>
-                            <th className="px-4 py-3">Unit</th>
-                            <th className="px-4 py-3">Mandor</th>
-                            <th className="px-4 py-3">Kedalaman</th>
-                            <th className="px-4 py-3">Solar</th>
-                            <th className="px-4 py-3">Efisiensi</th>
-                            <th className="px-4 py-3">Kendala</th>
+                            <th className="px-5 py-3">Tanggal</th>
+                            <th className="px-5 py-3">Unit</th>
+                            <th className="px-5 py-3">Mandor</th>
+                            <th className="px-5 py-3">Kedalaman</th>
+                            <th className="px-5 py-3">Solar</th>
+                            <th className="px-5 py-3">Efisiensi</th>
+                            <th className="px-5 py-3">Kendala</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-slate-100">
                         {reports.map((r) => (
-                            <tr key={r.id} className="border-t">
-                                <td className="px-4 py-3">{r.report_date}</td>
-                                <td className="px-4 py-3">{r.rig_unit?.code}</td>
-                                <td className="px-4 py-3">{r.user?.name}</td>
-                                <td className="px-4 py-3">{r.depth_meters} m</td>
-                                <td className="px-4 py-3">{r.fuel_liters} L</td>
-                                <td className="px-4 py-3">
-                                    {r.depth_meters > 0
-                                        ? (r.fuel_liters / r.depth_meters).toFixed(2)
-                                        : '-'} L/m
+                            <tr key={r.id} className="hover:bg-slate-50">
+                                <td className="px-5 py-3.5 font-data text-slate-700">{r.report_date}</td>
+                                <td className="px-5 py-3.5">
+                                    <div className="flex items-center gap-2 font-medium text-slate-800">
+                                        <ClipboardList size={15} className="text-slate-400" />
+                                        {r.rig_unit?.code}
+                                    </div>
                                 </td>
-                                <td className="px-4 py-3">
+                                <td className="px-5 py-3.5 text-slate-600">{r.user?.name}</td>
+                                <td className="px-5 py-3.5 font-data text-slate-700">{r.depth_meters} m</td>
+                                <td className="px-5 py-3.5 font-data text-slate-700">{r.fuel_liters} L</td>
+                                <td className="px-5 py-3.5 font-data text-slate-700">
+                                    {r.depth_meters > 0 ? (r.fuel_liters / r.depth_meters).toFixed(2) : '-'} L/m
+                                </td>
+                                <td className="px-5 py-3.5">
                                     {r.equipment_issue ? (
-                                        <span className="rounded bg-red-100 px-2 py-1 text-xs text-red-700">
-                                            {r.equipment_issue}
+                                        <span className="flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">
+                                            <AlertCircle size={12} /> {r.equipment_issue}
                                         </span>
                                     ) : (
-                                        <span className="text-gray-400">-</span>
+                                        <span className="text-slate-300">-</span>
                                     )}
                                 </td>
                             </tr>
