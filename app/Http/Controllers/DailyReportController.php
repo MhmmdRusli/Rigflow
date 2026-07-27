@@ -12,13 +12,19 @@ use Inertia\Inertia;
 class DailyReportController extends Controller
 {
     public function index()
-    {
-        $reports = DailyReport::with(['rigUnit', 'user'])->latest()->get();
+{
+    $reports = DailyReport::with(['rigUnit', 'user'])->latest()->get();
 
-        return Inertia::render('DailyReports/Index', [
-            'reports' => $reports,
-        ]);
-    }
+    $avgEfficiency = $reports->filter(fn ($r) => $r->depth_meters > 0)
+        ->avg(fn ($r) => $r->fuel_liters / $r->depth_meters);
+
+    return Inertia::render('DailyReports/Index', [
+        'reports' => $reports,
+        'totalReports' => $reports->count(),
+        'avgEfficiency' => round($avgEfficiency ?? 0, 2),
+        'issuesCount' => $reports->whereNotNull('equipment_issue')->count(),
+    ]);
+}
 
     public function create()
     {

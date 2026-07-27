@@ -10,13 +10,16 @@ use Inertia\Inertia;
 class InventoryItemController extends Controller
 {
     public function index()
-    {
-        $items = InventoryItem::with('project')->latest()->get();
+{
+    $items = InventoryItem::with('project')->latest()->get();
 
-        return Inertia::render('Inventory/Index', [
-            'items' => $items,
-        ]);
-    }
+    return Inertia::render('Inventory/Index', [
+        'items' => $items,
+        'totalItems' => $items->count(),
+        'lowStockCount' => $items->filter(fn ($i) => $i->quantity <= $i->low_stock_threshold)->count(),
+        'categoriesCount' => $items->pluck('category')->unique()->count(),
+    ]);
+}
 
     public function create()
     {

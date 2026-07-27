@@ -9,13 +9,16 @@ use Inertia\Inertia;
 class RepairTicketController extends Controller
 {
     public function index()
-    {
-        $tickets = RepairTicket::with('rigUnit')->latest()->get();
+{
+    $tickets = RepairTicket::with('rigUnit')->latest()->get();
 
-        return Inertia::render('RepairTickets/Index', [
-            'tickets' => $tickets,
-        ]);
-    }
+    return Inertia::render('RepairTickets/Index', [
+        'tickets' => $tickets,
+        'openCount' => $tickets->where('status', 'open')->count(),
+        'inProgressCount' => $tickets->where('status', 'in_progress')->count(),
+        'resolvedCount' => $tickets->where('status', 'resolved')->count(),
+    ]);
+}
 
     public function update(Request $request, RepairTicket $repairTicket)
     {

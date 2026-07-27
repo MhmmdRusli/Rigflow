@@ -10,19 +10,22 @@ use Inertia\Inertia;
 class CrewMemberController extends Controller
 {
     public function index()
-    {
-        $crewMembers = CrewMember::withCount('attendances')
-            ->with(['attendances' => fn ($q) => $q->select('crew_member_id')])
-            ->get()
-            ->map(function ($crew) {
-                $crew->total_overtime = $crew->attendances()->sum('overtime_hours');
-                return $crew;
-            });
+{
+    $crewMembers = CrewMember::withCount('attendances')
+        ->with(['attendances' => fn ($q) => $q->select('crew_member_id')])
+        ->get()
+        ->map(function ($crew) {
+            $crew->total_overtime = $crew->attendances()->sum('overtime_hours');
+            return $crew;
+        });
 
-        return Inertia::render('CrewMembers/Index', [
-            'crewMembers' => $crewMembers,
-        ]);
-    }
+    return Inertia::render('CrewMembers/Index', [
+        'crewMembers' => $crewMembers,
+        'totalCrew' => $crewMembers->count(),
+        'totalAttendances' => $crewMembers->sum('attendances_count'),
+        'totalOvertime' => $crewMembers->sum('total_overtime'),
+    ]);
+}
 
     public function create()
     {

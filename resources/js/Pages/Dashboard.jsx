@@ -1,34 +1,12 @@
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
 import { Link } from '@inertiajs/react';
-import { AlertTriangle, ClipboardList, Wrench, Gauge, Wallet, Inbox } from 'lucide-react';
+import { AlertTriangle, ClipboardList, Wrench, Gauge, Wallet } from 'lucide-react';
 import { RadialBarChart, RadialBar, PolarAngleAxis, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from 'recharts';
+import StatCard from '../Components/StatCard';
+import EmptyState from '../Components/EmptyState';
 
 function formatRupiah(num) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0, notation: 'compact' }).format(num);
-}
-
-function StatCard({ label, value, accent, bg, icon: Icon }) {
-    return (
-        <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-            <div className={`absolute inset-y-0 left-0 w-1 ${accent}`} />
-            <div className="flex items-start justify-between">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${bg}`}>
-                    <Icon size={18} className={accent.replace('bg-', 'text-')} strokeWidth={2} />
-                </div>
-            </div>
-            <p className="mt-4 text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
-            <p className="font-data mt-1 text-2xl font-semibold text-slate-900">{value}</p>
-        </div>
-    );
-}
-
-function EmptyState({ text }) {
-    return (
-        <div className="flex flex-col items-center gap-2 py-8 text-center">
-            <Inbox size={22} className="text-slate-300" />
-            <p className="text-sm text-slate-400">{text}</p>
-        </div>
-    );
 }
 
 export default function Dashboard({
